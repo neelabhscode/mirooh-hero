@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiRooh – Hand-Embroidered Luxury</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #c4973a;
+    --gold-light: #d4a84b;
+    --gold-dim: rgba(196,151,58,0.18);
+    --white: #ffffff;
+    --off-white: rgba(255,255,255,0.92);
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    font-family: 'Jost', sans-serif;
+    background: #111;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, opacity 0.2s;
+    mix-blend-mode: normal;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(196,151,58,0.55);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: width 0.35s cubic-bezier(0.25,0.46,0.45,0.94),
+                height 0.35s cubic-bezier(0.25,0.46,0.45,0.94),
+                border-color 0.3s ease,
+                left 0.06s linear,
+                top 0.06s linear;
+  }
+
+  body.hovering .cursor { width: 6px; height: 6px; }
+  body.hovering .cursor-ring {
+    width: 56px; height: 56px;
+    border-color: rgba(196,151,58,0.85);
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    background: rgba(255,254,244,0.0);
+    border-bottom: 1px solid rgba(205,175,78,0.0);
+    transition: background 0.5s ease, border-color 0.5s ease, backdrop-filter 0.5s ease;
+    backdrop-filter: blur(0px);
+  }
+
+  nav.scrolled {
+    background: rgba(255,254,244,0.95);
+    border-bottom: 1px solid #CDAF4E;
+    backdrop-filter: blur(12px);
+  }
+
+  /* on load, nav slides in from top */
+  nav {
+    animation: navIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  }
+  @keyframes navIn {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .nav-logo .logo-svg { height: 32px; width: auto; }
+
+  .nav-center {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .nav-center a {
+    text-decoration: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 3px;
+    transition: color 0.25s;
+  }
+
+  .nav-center a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0%; height: 1px;
+    background: var(--gold);
+    transition: width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .nav-center a:hover { color: var(--white); }
+  .nav-center a:hover::after { width: 100%; }
+
+  nav.scrolled .nav-center a { color: #2a2a2a; }
+  nav.scrolled .nav-center a:hover { color: var(--gold); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-icon {
+    color: var(--gold);
+    cursor: none;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 6px;
+  }
+
+  .nav-icon svg {
+    width: 18px; height: 18px;
+    stroke: rgba(255,255,255,0.85);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.25s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  nav.scrolled .nav-icon svg { stroke: var(--gold); }
+  .nav-icon:hover svg { transform: scale(1.18); stroke: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 700px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 55% 30%;
+    transform: scale(1.08);
+    transition: transform 9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+    filter: brightness(0.92);
+  }
+
+  .hero.loaded .hero-bg {
+    transform: scale(1.0);
+  }
+
+  /* Parallax on mouse move — applied via JS */
+  .hero-bg {
+    transform-origin: center center;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top right,
+      rgba(0,0,0,0.65) 0%,
+      rgba(0,0,0,0.38) 35%,
+      rgba(0,0,0,0.0) 65%
+    );
+  }
+
+  /* Vignette edges */
+  .hero-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.35) 100%);
+    pointer-events: none;
+  }
+
+  /* ── HERO CONTENT ── */
+  .hero-content {
+    position: absolute;
+    bottom: 0; left: 0;
+    padding: 0 72px 90px 72px;
+    max-width: 700px;
+  }
+
+  /* Staggered entrance animations */
+  .hero-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 300;
+    line-height: 1.12;
+    letter-spacing: 0.5px;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    max-width: 620px;
+    opacity: 0;
+    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.95s both;
+  }
+
+  .hero-subline {
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 36px;
+    letter-spacing: 0.2px;
+    max-width: 300px;
+    opacity: 0;
+    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 1.15s both;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 1.35s both;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: var(--gold);
+    color: var(--white);
+    font-family: 'Jost', sans-serif;
+    font-size: 11.5px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1.5px solid var(--gold);
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.35s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.0);
+    transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background 0.4s;
+  }
+
+  .btn-primary:hover::before {
+    transform: translateX(0);
+    background: rgba(0,0,0,0.15);
+  }
+
+  .btn-primary .btn-arrow {
+    display: inline-block;
+    transform: translateX(0);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-primary:hover .btn-arrow { transform: translateX(5px); }
+
+  .btn-primary span:first-child { position: relative; z-index: 1; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    background: transparent;
+    color: var(--white);
+    font-family: 'Jost', sans-serif;
+    font-size: 11.5px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    cursor: none;
+    transition: border-color 0.3s ease, background 0.3s ease, letter-spacing 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.9);
+    letter-spacing: 2.2px;
+  }
+
+  /* ── HERO TAGS ── */
+  .hero-tags {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.4px;
+    color: rgba(255,255,255,0.55);
+    opacity: 0;
+    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 1.55s both;
+  }
+
+  .hero-tags span { white-space: nowrap; }
+  .hero-tags .sep { margin: 0 12px; color: rgba(255,255,255,0.25); }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    right: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeIn 1s ease 2s both;
+  }
+
+  .scroll-hint span {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    writing-mode: vertical-rl;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out 2.2s infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1); opacity: 1; }
+    50% { transform: scaleY(0.5); opacity: 0.4; }
+  }
+
+  /* ── GOLD PARTICLE DOTS (decorative corners) ── */
+  .hero-ornament {
+    position: absolute;
+    top: 120px;
+    right: 60px;
+    width: 120px;
+    height: 120px;
+    opacity: 0;
+    animation: fadeIn 1.5s ease 1.8s both;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-center { display: none; }
+    .hero-content { padding: 0 28px 60px 28px; max-width: 100%; }
+    .hero-headline { font-size: 32px; }
+    .scroll-hint { display: none; }
+    .hero-ornament { display: none; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" class="logo-svg" aria-label="MiRooh">
+      <text x="4" y="36"
+        font-family="'Cormorant Garamond', Georgia, serif"
+        font-size="38" font-weight="500"
+        fill="#c4973a" letter-spacing="-0.5">MiRooh</text>
+    </svg>
+  </a>
+
+  <div class="nav-center">
+    <a href="#">Shop</a>
+    <a href="#">Gifting</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+  </div>
+
+  <div class="nav-right">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.4 15.4 0 006.6 6.6l2.2-2.2a1 1 0 011.02-.24 11.5 11.5 0 003.58.58 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.58 3.58a1 1 0 01-.24 1.02L6.6 10.8z"/></svg>
+    </span>
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </span>
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    </span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <img class="hero-bg" id="heroBg"
+    src="hero-bg.jpg"
+    alt="Luxury hand-embroidered cushion with leopard motif on a sofa">
+  <div class="hero-overlay"></div>
+  <div class="hero-vignette"></div>
+
+  <!-- Decorative SVG ornament top-right -->
+  <svg class="hero-ornament" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="60" r="59" stroke="rgba(196,151,58,0.2)" stroke-width="0.5"/>
+    <circle cx="60" cy="60" r="45" stroke="rgba(196,151,58,0.12)" stroke-width="0.5"/>
+    <line x1="60" y1="1" x2="60" y2="119" stroke="rgba(196,151,58,0.08)" stroke-width="0.5"/>
+    <line x1="1" y1="60" x2="119" y2="60" stroke="rgba(196,151,58,0.08)" stroke-width="0.5"/>
+    <circle cx="60" cy="60" r="3" fill="rgba(196,151,58,0.4)"/>
+    <circle cx="60" cy="15" r="1.5" fill="rgba(196,151,58,0.3)"/>
+    <circle cx="60" cy="105" r="1.5" fill="rgba(196,151,58,0.3)"/>
+    <circle cx="15" cy="60" r="1.5" fill="rgba(196,151,58,0.3)"/>
+    <circle cx="105" cy="60" r="1.5" fill="rgba(196,151,58,0.3)"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">New Collection 2025</div>
+    <h1 class="hero-headline">Hand-Embroidered Luxury for Modern Homes</h1>
+    <p class="hero-subline">Designed by textile specialists. Crafted by master artisans.</p>
+    <div class="hero-buttons">
+      <a href="#" class="btn-primary">
+        <span>Explore the Collection</span>
+        <span class="btn-arrow">&#8594;</span>
+      </a>
+      <a href="#" class="btn-secondary">New Arrivals</a>
+    </div>
+    <div class="hero-tags">
+      <span>Free Shipping in India</span>
+      <span class="sep">|</span>
+      <span>Shipping Worldwide</span>
+      <span class="sep">|</span>
+      <span>Handcrafted by Artisans</span>
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<script>
+  // ── Custom cursor ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  // Lagged ring
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Hover states
+  document.querySelectorAll('a, button, .nav-icon, .btn-primary, .btn-secondary').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+  });
+
+  // ── Parallax on mouse move ──
+  const heroBg = document.getElementById('heroBg');
+  const hero = document.getElementById('hero');
+
+  hero.addEventListener('mousemove', e => {
+    const rect = hero.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) / rect.width - 0.5;
+    const cy = (e.clientY - rect.top) / rect.height - 0.5;
+    const moveX = cx * 18;
+    const moveY = cy * 12;
+    heroBg.style.transform = `scale(1.06) translate(${moveX}px, ${moveY}px)`;
+  });
+
+  hero.addEventListener('mouseleave', () => {
+    heroBg.style.transform = 'scale(1.06) translate(0px, 0px)';
+  });
+
+  // ── Entrance: scale-in on load ──
+  window.addEventListener('load', () => {
+    setTimeout(() => hero.classList.add('loaded'), 50);
+  });
+  hero.classList.add('loaded');
+
+  // ── Navbar: transparent -> frosted on scroll ──
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+  });
+</script>
+</body>
+</html>
