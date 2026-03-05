@@ -175,7 +175,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 42%;
+    object-position: 50% 15%;
     transform: scale(1.08);
     transition: transform 9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: transform;
@@ -208,6 +208,15 @@
     inset: 0;
     background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.35) 100%);
     pointer-events: none;
+  }
+
+  .hero-top-gradient {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 160px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.0) 100%);
+    pointer-events: none;
+    z-index: 1;
   }
 
   /* ── HERO CONTENT ── */
@@ -487,6 +496,7 @@
     alt="Luxury hand-embroidered cushion with leopard motif on a sofa">
   <div class="hero-overlay"></div>
   <div class="hero-vignette"></div>
+  <div class="hero-top-gradient"></div>
 
   <!-- Decorative SVG ornament top-right -->
   <svg class="hero-ornament" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -502,7 +512,7 @@
   </svg>
 
   <div class="hero-content">
-    <div class="hero-eyebrow">New Collection 2025</div>
+    <div class="hero-eyebrow">New Collection 2026</div>
     <h1 class="hero-headline">Hand-Embroidered Luxury for Modern Homes</h1>
     <p class="hero-subline">Designed by textile specialists. Crafted by master artisans.</p>
     <div class="hero-buttons">
